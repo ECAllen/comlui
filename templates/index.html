@@ -1,19 +1,42 @@
 {% extends "_base.html" %}
 
-<!-- create a block called "content" -->
 {% block content %}
     <h1>Home</h1>
-    <form action="/trainer" method="POST" >
-      <!-- label for="data">Data</label>  -->
-      <label for="data">Data</label>
-      <input type="text" name="data" placeholder="data.csv">
-      <label for="features">Features</label>
-      <input type="text" name="features">
-      <label for="target">Target</label>
-      <input type="text" name="target">
-      <input type="submit" value="Submit">
+    <form hx-post="/trainer" >
+      <div hx-target="this" hx-swap="outerHTML">
+        <label>Data</label>
+        <input  name="data" placeholder="data.csv" hx-post="/trainer/data" hx-indicator="#ind">
+        <img id="ind" src="/img/bars.svg" class="htmx-indicator"/>
+      </div>
+      <div>
+        <label>Features</label>
+        <input type="text" name="features">
+      </div>
+      <div>
+        <label> Target</label>
+        <input type="text" name="target">
+      </div>
+      <button>Siubmit</button>
     </form>
-    
 {% endblock %}
 
+<!--
+<h3>Signup Form</h3>
+<form hx-post="/contact">
+  <div hx-target="this" hx-swap="outerHTML">
+    <label>Email Address</label>
+    <input name="email" hx-post="/contact/email" hx-indicator="#ind">
+    <img id="ind" src="/img/bars.svg" class="htmx-indicator"/>
+  </div>
+  <div class="form-group">
+    <label>First Name</label>
+    <input type="text" class="form-control" name="firstName">
+  </div>
+  <div class="form-group">
+    <label>Last Name</label>
+    <input type="text" class="form-control" name="lastName">
+  </div>
+  <button class="btn btn-default">Submit</button>
+</form>
+-->
 
