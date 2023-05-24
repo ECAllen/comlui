@@ -1,0 +1,15 @@
+
+<div hx-target="this" hx-swap="outerHTML" class="error">
+  <label>Data</label>
+  <input  name="data" placeholder="data.csv" hx-post="/trainer/data" hx-indicator="#ind">
+  <img id="ind" src="/img/bars.svg" class="htmx-indicator"/>
+  <div>Error File not found</div>
+</div>
+<!--
+<div hx-target="this" hx-swap="outerHTML" class="error">
+  <label>Email Address</label>
+  <input name="email" hx-post="/contact/email" hx-indicator="#ind" value="test@foo.com">
+  <img id="ind" src="/img/bars.svg" class="htmx-indicator"/>
+  <div class='error-message'>That email is already taken.  Please enter another email.</div>
+</div> 
+-->

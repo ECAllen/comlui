@@ -37,9 +37,15 @@ async def index(
     features: Annotated[str, Form()],
     target: Annotated[str, Form()],
 ):
+    # features = ["Sex", "Age"]
+    return {"data": data, "features": features, "target": target}
+
+@app.post("trainer/data")
+async def index(
+    data: Annotated[str, Form()],
+):
     try:
         train = pd.read_csv(data)
     except FileNotFoundError:
         return {"error": "File not found"}
-    # features = ["Sex", "Age"]
-    return {"data": data, "features": features, "target": target}
+    return {"data": data}
