@@ -40,12 +40,24 @@ async def index(
     # features = ["Sex", "Age"]
     return {"data": data, "features": features, "target": target}
 
-@app.post("trainer/data")
-async def index(
+
+@app.post("/trainer/data")
+async def index( 
+    request: Request,
     data: Annotated[str, Form()],
 ):
     try:
         train = pd.read_csv(data)
     except FileNotFoundError:
-        return {"error": "File not found"}
-    return {"data": data}
+        context = {"request": request}
+        return templates.TemplateResponse("partials/data_form_input.html", context)
+    return 200
+
+
+
+
+
+
+
+
+
