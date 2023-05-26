@@ -3,11 +3,7 @@
 {% block content %}
     <h1>Home</h1>
     <form hx-post="/trainer" >
-      <div hx-target="this" hx-swap="outerHTML">
-        <label>Data</label>
-        <input  name="data" placeholder="data.csv" hx-post="/trainer/data" hx-indicator="#ind">
-        <img id="ind" src="/img/bars.svg" class="htmx-indicator"/>
-      </div>
+      {% include 'partials/data_form_input.html' with context %}
       <div>
         <label>Features</label>
         <input type="text" name="features">

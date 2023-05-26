@@ -2,6 +2,9 @@ install:
 	pip3 install --upgrade pip &&\
 		pip3 install -r requirements.txt
 
+snapshot:
+	pip3 freeze > requirements.txt
+
 format:
 	black *.py
 
