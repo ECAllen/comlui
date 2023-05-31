@@ -3,7 +3,8 @@
 {% block content %}
     <h1>Home</h1>
     <form hx-post="/trainer" >
-      {% include 'partials/data_form_input.html' with context %}
+      {% include 'partials/_form.html' with context %}
+      {% include 'partials/test_form.html' with context %}
       <div>
         <label>Features</label>
         <input type="text" name="features">
@@ -12,7 +13,7 @@
         <label> Target</label>
         <input type="text" name="target">
       </div>
-      <button>Siubmit</button>
+      <button>Submit</button>
     </form>
 {% endblock %}
 

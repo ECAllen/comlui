@@ -5,9 +5,10 @@ from fastapi.staticfiles import StaticFiles
 from typing import Annotated
 
 import toml
-import pandas as pd
 import os
 
+from sklearn.ensemble import RandomForestClassifier
+import pandas as pd
 
 app = FastAPI()
 
@@ -36,21 +37,41 @@ async def index(request: Request):
 @app.post("/trainer")
 async def index(
     data: Annotated[str, Form()],
-    features: Annotated[str, Form()], target: Annotated[str, Form()],
+    features: Annotated[str, Form()], 
+    target: Annotated[str, Form()],
 ):
-    # features = ["Sex", "Age"]
+    features = features.split() 
+
+    if data.endswith(".csv") and os.path.isfile(data):
+        train = pd.read_csv(data)
+
+    if data.endswith(".csv") and os.path.isfile(data):
+        test = pd.read_csv("./test.csv")
+
+    X = pd.get_dummies(train[features])
+    X_test = pd.get_dummies(test[features])
+    y = train["Survived"]
+
+    age_mean = int(X.Age.mean())
+    X.Age = X.Age.fillna(age_mean)
+
+    age_mean = int(X_test.Age.mean())
+    X_test.Age = X_test.Age.fillna(age_mean)
+
+    forest = RandomForestClassifier(n_estimators=100, max_depth=5, random_state=1)
+
     return {"data": data, "features": features, "target": target}
 
 
-@app.post("/trainer/data")
+@app.post("/trainer/data/{data_split}")
 async def index( 
     request: Request,
-    data: Annotated[str, Form()],
+    data_file: Annotated[str, Form()],
 ):
-    context = {"request": request, "data": data}
-    if data.endswith(".csv") and os.path.isfile(data):
-        return templates.TemplateResponse("partials/data_form_input.html", context)
+    context = {"request": request, "data_file": data_file}
+    if data_file.endswith(".csv") and os.path.isfile(data):
+        return templates.TemplateResponse(f"partials/{data_split}_data_form.html", context)
     else:
-        return templates.TemplateResponse("partials/error_data_form_input.html", context)
+        return templates.TemplateResponse(f"partials/error_{data_split}_data_form.html", context)
 
 
