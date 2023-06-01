@@ -6,6 +6,7 @@ from typing import Annotated
 
 import toml
 import os
+from pathlib import Path
 
 from sklearn.ensemble import RandomForestClassifier
 import pandas as pd
@@ -25,6 +26,11 @@ app_name = config["app"]["name"]
 #  Set the app version from the config file
 app_version = config["app"]["version"]
 
+def data_file_checks(fname):
+    if fname.endswith(".csv") and os.path.isfile(fname):
+        return True
+    else: 
+        return False
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
@@ -32,21 +38,26 @@ async def index(request: Request):
     return templates.TemplateResponse("index.html", context)
 
 
+
 # create a post method for the form from index.html
 # https://fastapi.tiangolo.com/tutorial/request-forms/
 @app.post("/trainer")
 async def index(
-    data: Annotated[str, Form()],
+    train_file: Annotated[str, Form()],
+    test_file: Annotated[str, Form()],
     features: Annotated[str, Form()], 
-    target: Annotated[str, Form()],
 ):
     features = features.split() 
 
-    if data.endswith(".csv") and os.path.isfile(data):
-        train = pd.read_csv(data)
+    if data_file_checks(train_file):
+        train = pd.read_csv(train_file)
+    else:
+        raise HTTPException(status_code=400, detail=f"{train_file} File not found")
 
-    if data.endswith(".csv") and os.path.isfile(data):
-        test = pd.read_csv("./test.csv")
+    if data_file_checks(test_file):
+        test = pd.read_csv(test_file)
+    else:
+        raise HTTPException(status_code=400, detail=f"{test_file} File not found")
 
     X = pd.get_dummies(train[features])
     X_test = pd.get_dummies(test[features])
@@ -60,18 +71,31 @@ async def index(
 
     forest = RandomForestClassifier(n_estimators=100, max_depth=5, random_state=1)
 
-    return {"data": data, "features": features, "target": target}
+    return {"train data": train_file, "features": features}
 
 
-@app.post("/trainer/data/{data_split}")
+@app.post("/trainer/data/train")
 async def index( 
     request: Request,
-    data_file: Annotated[str, Form()],
+    train_file: Annotated[str, Form()],
 ):
-    context = {"request": request, "data_file": data_file}
-    if data_file.endswith(".csv") and os.path.isfile(data):
-        return templates.TemplateResponse(f"partials/{data_split}_data_form.html", context)
+    # TODO add train specifc tests
+    context = {"request": request, "train_file": train_file}
+    if data_file_checks(train_file): 
+        return templates.TemplateResponse("partials/train_data_form.html", context)
     else:
-        return templates.TemplateResponse(f"partials/error_{data_split}_data_form.html", context)
+        return templates.TemplateResponse("partials/error_train_data_form.html", context)
 
+
+@app.post("/trainer/data/test")
+async def index( 
+    request: Request,
+    test_file: Annotated[str, Form()],
+):
+    # TODO add test specifc tests
+    context = {"request": request, "test_file": test_file}
+    if data_file_checks(test_file): 
+        return templates.TemplateResponse("partials/test_data_form.html", context)
+    else:
+        return templates.TemplateResponse("partials/error_test_data_form.html", context)
 

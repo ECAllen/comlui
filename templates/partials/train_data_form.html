@@ -1,6 +1,6 @@
 
 <div hx-target="this" hx-swap="outerHTML" class="error">
   <label>Training data</label>
-  <input  name="data" placeholder="Path to your training data" hx-post="/trainer/data" hx-indicator="#ind" value="{{ data }}">
+  <input  name="train_file" placeholder="Path to your training data" hx-post="/trainer/data/train" hx-indicator="#ind" value="{{ train_file }}">
   <img id="ind" src="{{ url_for('static', path='/img/bars.svg') }}" class="htmx-indicator"/>
 </div>

@@ -1,7 +1,7 @@
 
 <div hx-target="this" hx-swap="outerHTML" class="error">
-  <label>Data</label>
-  <input  name="data" placeholder="data.csv" hx-post="/trainer/data" hx-indicator="#ind" value="{{ data }}">
+  <label>Training data</label>
+  <input  name="train_file" placeholder="Path to your training data" hx-post="/trainer/data/train" hx-indicator="#ind" value="{{ train_file }}">
   <img id="ind" src="{{ url_for('static', path='/img/bars.svg') }}" class="htmx-indicator"/>
   <div class="text-red-500 text-xs italic">Error File not found</div>
 </div>

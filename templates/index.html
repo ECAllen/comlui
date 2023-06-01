@@ -3,16 +3,18 @@
 {% block content %}
     <h1>Home</h1>
     <form hx-post="/trainer" >
-      {% include 'partials/_form.html' with context %}
-      {% include 'partials/test_form.html' with context %}
+      {% include 'partials/train_data_form.html' with context %}
+      {% include 'partials/test_data_form.html' with context %}
       <div>
         <label>Features</label>
         <input type="text" name="features">
       </div>
+      <!--
       <div>
         <label> Target</label>
         <input type="text" name="target">
       </div>
+      -->
       <button>Submit</button>
     </form>
 {% endblock %}
